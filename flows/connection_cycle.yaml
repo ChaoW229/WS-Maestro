@@ -1,0 +1,10 @@
+appId: com.sinognss.ws
+---
+- launchApp:
+    clearState: false
+- tapOn: "开始作业"
+- repeat:
+    times: 2
+    commands:
+      - runFlow:
+          file: ../subflows/connect_and_disconnect_once.yaml

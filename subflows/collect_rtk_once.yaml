@@ -1,0 +1,17 @@
+appId: com.sinognss.ws
+---
+- tapOn: "开始作业"
+- tapOn:
+    id: bt_stop
+- tapOn:
+    id: text_input_end_icon
+- tapOn: "RTK"
+- tapOn: "开始采集"
+- assertVisible: "采集中"
+- assertVisible: "00:10"
+- tapOn:
+    id: bt_stop
+- tapOn: "确定"
+- assertNotVisible: "数据保存"
+- tapOn:
+    id: iv_back

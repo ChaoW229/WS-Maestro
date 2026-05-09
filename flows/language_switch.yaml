@@ -1,0 +1,20 @@
+appId: com.sinognss.ws
+data: ../data/languages.csv
+---
+- launchApp:
+    clearState: true
+
+- runFlow:
+    file: ../subflows/open_language_settings.yaml
+
+- evalScript: |
+    output.languageIndex = parseInt(lanx, 10) + 1;
+
+- tapOn:
+    id: tv_name
+    index: ${output.languageIndex}
+
+- runFlow:
+    file: ../subflows/confirm_language_change.yaml
+
+- assertVisible: "${expectedText}"

@@ -1,0 +1,6 @@
+appId: com.sinognss.ws
+---
+- tapOn:
+    id: iv_setting
+- tapOn:
+    id: rb_language

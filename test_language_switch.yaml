@@ -1,0 +1,4 @@
+appId: com.sinognss.ws
+---
+- runFlow:
+    file: flows/language_switch.yaml
