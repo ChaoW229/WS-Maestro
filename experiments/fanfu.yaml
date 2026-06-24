@@ -1,0 +1,21 @@
+appId: com.sinognss.ws
+---
+
+# 初始化计数器
+- evalScript: ${output.counts = {}}
+- evalScript: ${output.counts.delay = 0}
+- evalScript: ${output.counts.version = 0}
+- evalScript: ${output.counts.rtk = 0}
+- evalScript: ${output.counts.ready = 0}
+
+- repeat:
+    times: 20
+    commands:
+      - runFlow:
+          file: ../subflows/buxianshi.yaml
+
+- evalScript: '${console.log("统计结果：延迟=" + output.counts.delay + "/20，版本=" + output.counts.version + "/20，RTK=" + output.counts.rtk + "/20，准备就绪=" + output.counts.ready + "/20")}'
+
+- assertTrue:
+    condition: ${output.counts.delay == 20}
+    label: ${"统计结果：延迟=" + output.counts.delay + "/20，版本=" + output.counts.version + "/20，RTK=" + output.counts.rtk + "/20，准备就绪=" + output.counts.ready + "/20"}

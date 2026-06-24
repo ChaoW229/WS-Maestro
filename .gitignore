@@ -1,25 +1,45 @@
 # IDE
+
 .idea/
 .vscode/
 
+# Maestro
+
+.maestro/
+maestro-debug/
+maestro-output/
+**/maestro-debug/
+**/maestro-output/
+
 # Logs
+
 *.log
 
 # Python
-__pycache__/
+
+**pycache**/
 *.pyc
 .venv/
 venv/
 
 # Node
+
 node_modules/
 
 # OS
+
 .DS_Store
 Thumbs.db
 
 # Env / secrets
+
 .env
 .env.*
 *.key
 *.pem
+
+# Reports
+
+reports/
+screenshots/
+output/
