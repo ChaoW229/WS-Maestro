@@ -8,14 +8,27 @@ pipeline {
 
     environment {
         MAESTRO = 'D:\\MaestroCLI\\bin\\maestro.bat'
+        ARTIFACT_DIR = 'artifacts'
     }
 
     stages {
+        stage('Prepare Artifacts') {
+            steps {
+                bat '''
+                if exist %ARTIFACT_DIR% rmdir /s /q %ARTIFACT_DIR%
+                mkdir %ARTIFACT_DIR%
+                '''
+            }
+        }
+
         stage('Check Environment') {
             steps {
                 bat 'git --version'
                 bat 'adb version'
                 bat '"%MAESTRO%" --version'
+
+                bat 'adb version > %ARTIFACT_DIR%\\adb-version.txt'
+                bat '"%MAESTRO%" --version > %ARTIFACT_DIR%\\maestro-version.txt'
             }
         }
 
@@ -24,6 +37,20 @@ pipeline {
                 bat 'adb kill-server'
                 bat 'adb start-server'
                 bat 'adb devices -l'
+
+                bat 'adb devices -l > %ARTIFACT_DIR%\\device-info.txt'
+            }
+        }
+
+        stage('Write Build Metadata') {
+            steps {
+                bat '''
+                echo JOB_NAME=%JOB_NAME%> %ARTIFACT_DIR%\\execution-meta.txt
+                echo BUILD_NUMBER=%BUILD_NUMBER%>> %ARTIFACT_DIR%\\execution-meta.txt
+                echo DEVICE_ID=%DEVICE_ID%>> %ARTIFACT_DIR%\\execution-meta.txt
+                echo TEST_TAG=%TEST_TAG%>> %ARTIFACT_DIR%\\execution-meta.txt
+                echo WORKSPACE=%WORKSPACE%>> %ARTIFACT_DIR%\\execution-meta.txt
+                '''
             }
         }
 
@@ -36,14 +63,14 @@ pipeline {
 
         stage('Run Maestro') {
             steps {
-                bat '"%MAESTRO%" --device %DEVICE_ID% test . --include-tags=%TEST_TAG% --debug-output maestro-debug'
+                bat '"%MAESTRO%" --device %DEVICE_ID% test . --include-tags=%TEST_TAG% --debug-output %ARTIFACT_DIR%\\maestro-debug'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'maestro-debug/**/*', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'artifacts/**/*', allowEmptyArchive: true
         }
     }
 }
