@@ -6,12 +6,16 @@ pipeline {
         choice(name: 'TEST_TAG', choices: ['smoke', 'regression'], description: 'Maestro test tag')
     }
 
+    environment {
+        MAESTRO = 'D:\\MaestroCLI\\bin\\maestro.bat'
+    }
+
     stages {
         stage('Check Environment') {
             steps {
                 bat 'git --version'
                 bat 'adb version'
-                bat 'maestro --version'
+                bat '"%MAESTRO%" --version'
             }
         }
 
@@ -32,7 +36,7 @@ pipeline {
 
         stage('Run Maestro') {
             steps {
-                bat 'maestro --device %DEVICE_ID% test . --include-tags=%TEST_TAG% --debug-output maestro-debug'
+                bat '"%MAESTRO%" --device %DEVICE_ID% test . --include-tags=%TEST_TAG% --debug-output maestro-debug'
             }
         }
     }
@@ -42,4 +46,4 @@ pipeline {
             archiveArtifacts artifacts: 'maestro-debug/**/*', allowEmptyArchive: true
         }
     }
-}
+}s
