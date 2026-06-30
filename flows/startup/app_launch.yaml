@@ -1,0 +1,12 @@
+appId: com.sinognss.ws
+tags:
+  - smoke
+  - regression
+  - startup
+  - stable
+---
+- launchApp:
+    clearState: false
+
+- assertVisible:
+    id: "iv_setting"

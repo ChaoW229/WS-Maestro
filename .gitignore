@@ -43,3 +43,10 @@ Thumbs.db
 reports/
 screenshots/
 output/
+
+# CI output
+artifacts/
+reports/
+
+# Local temp
+tree.txt
