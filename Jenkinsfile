@@ -1,11 +1,45 @@
 pipeline {
     agent any
 
+    parameters {
+        string(name: 'DEVICE_ID', defaultValue: 'SD53150494', description: 'Android device id')
+        choice(name: 'TEST_TAG', choices: ['smoke', 'regression'], description: 'Maestro test tag')
+    }
+
     stages {
-        stage('Hello') {
+        stage('Check Environment') {
             steps {
-                echo 'Hello Jenkins + GitHub'
+                bat 'git --version'
+                bat 'adb version'
+                bat 'maestro --version'
             }
+        }
+
+        stage('Check Devices') {
+            steps {
+                bat 'adb kill-server'
+                bat 'adb start-server'
+                bat 'adb devices -l'
+            }
+        }
+
+        stage('Clean ADB Forward') {
+            steps {
+                bat 'adb forward --remove-all'
+                bat 'adb reverse --remove-all'
+            }
+        }
+
+        stage('Run Maestro') {
+            steps {
+                bat 'maestro --device %DEVICE_ID% test . --include-tags=%TEST_TAG% --debug-output maestro-debug'
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'maestro-debug/**/*', allowEmptyArchive: true
         }
     }
 }
