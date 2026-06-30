@@ -46,4 +46,4 @@ pipeline {
             archiveArtifacts artifacts: 'maestro-debug/**/*', allowEmptyArchive: true
         }
     }
-}s
+}
