@@ -50,6 +50,8 @@ pipeline {
                 echo DEVICE_ID=%DEVICE_ID%>> %ARTIFACT_DIR%\\execution-meta.txt
                 echo TEST_TAG=%TEST_TAG%>> %ARTIFACT_DIR%\\execution-meta.txt
                 echo WORKSPACE=%WORKSPACE%>> %ARTIFACT_DIR%\\execution-meta.txt
+		bat 'git rev-parse HEAD > %ARTIFACT_DIR%\\git-commit.txt'
+		bat 'git log -1 --pretty=oneline > %ARTIFACT_DIR%\\git-last-commit.txt'
                 '''
             }
         }
