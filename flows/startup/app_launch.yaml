@@ -1,4 +1,4 @@
-appId: com.sinognss.ws
+appId: ${APP_ID}
 tags:
   - smoke
   - regression

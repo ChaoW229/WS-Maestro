@@ -3,6 +3,7 @@ pipeline {
 
     parameters {
         string(name: 'DEVICE_ID', defaultValue: 'SD53150494', description: 'Android device id')
+	string(name: 'APP_ID', defaultValue: 'com.sinognss.ws', description: 'Android app package name')
         choice(name: 'TEST_TAG', choices: ['smoke', 'regression'], description: 'Maestro test tag')
     }
 
@@ -48,6 +49,7 @@ pipeline {
                 echo JOB_NAME=%JOB_NAME%> %ARTIFACT_DIR%\\execution-meta.txt
                 echo BUILD_NUMBER=%BUILD_NUMBER%>> %ARTIFACT_DIR%\\execution-meta.txt
                 echo DEVICE_ID=%DEVICE_ID%>> %ARTIFACT_DIR%\\execution-meta.txt
+		echo APP_ID=%APP_ID%>> %ARTIFACT_DIR%\execution-meta.txt
                 echo TEST_TAG=%TEST_TAG%>> %ARTIFACT_DIR%\\execution-meta.txt
                 echo WORKSPACE=%WORKSPACE%>> %ARTIFACT_DIR%\\execution-meta.txt
 		
@@ -66,7 +68,7 @@ pipeline {
 
         stage('Run Maestro') {
             steps {
-                bat '"%MAESTRO%" --device %DEVICE_ID% test . --include-tags=%TEST_TAG% --debug-output %ARTIFACT_DIR%\\maestro-debug'
+                bat '"%MAESTRO%" --device %DEVICE_ID% test -e APP_ID=%APP_ID% . --include-tags=%TEST_TAG% --debug-output %ARTIFACT_DIR%\\maestro-debug'
             }
         }
     }
