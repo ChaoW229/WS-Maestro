@@ -1,9 +1,0 @@
-appId: com.sinognss.ws
----
-- launchApp:
-    clearState: false
-- repeat:
-    times: 3
-    commands:
-      - runFlow:
-          file: ../subflows/collect_rtk_once.yaml

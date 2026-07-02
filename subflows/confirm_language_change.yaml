@@ -1,6 +1,0 @@
-appId: com.sinognss.ws
----
-- tapOn:
-    id: iv_left_icon
-- tapOn:
-    id: btn_positive

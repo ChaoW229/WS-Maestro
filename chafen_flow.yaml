@@ -1,4 +1,0 @@
-appId: com.sinognss.ws
----
-- runFlow:
-    file: flows/connection_cycle.yaml

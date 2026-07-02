@@ -49,7 +49,7 @@ pipeline {
                 echo JOB_NAME=%JOB_NAME%> %ARTIFACT_DIR%\\execution-meta.txt
                 echo BUILD_NUMBER=%BUILD_NUMBER%>> %ARTIFACT_DIR%\\execution-meta.txt
                 echo DEVICE_ID=%DEVICE_ID%>> %ARTIFACT_DIR%\\execution-meta.txt
-		echo APP_ID=%APP_ID%>> %ARTIFACT_DIR%\execution-meta.txt
+		echo APP_ID=%APP_ID%>> %ARTIFACT_DIR%\\execution-meta.txt
                 echo TEST_TAG=%TEST_TAG%>> %ARTIFACT_DIR%\\execution-meta.txt
                 echo WORKSPACE=%WORKSPACE%>> %ARTIFACT_DIR%\\execution-meta.txt
 		

@@ -1,0 +1,313 @@
+warning: in the working copy of 'flows/startup/app_launch.yaml', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/Jenkinsfile b/Jenkinsfile[m
+[1mindex ed29d07..bcd765f 100644[m
+[1m--- a/Jenkinsfile[m
+[1m+++ b/Jenkinsfile[m
+[36m@@ -3,6 +3,7 @@[m [mpipeline {[m
+ [m
+     parameters {[m
+         string(name: 'DEVICE_ID', defaultValue: 'SD53150494', description: 'Android device id')[m
+[32m+[m	[32mstring(name: 'APP_ID', defaultValue: 'com.sinognss.ws', description: 'Android app package name')[m
+         choice(name: 'TEST_TAG', choices: ['smoke', 'regression'], description: 'Maestro test tag')[m
+     }[m
+ [m
+[36m@@ -48,6 +49,7 @@[m [mpipeline {[m
+                 echo JOB_NAME=%JOB_NAME%> %ARTIFACT_DIR%\\execution-meta.txt[m
+                 echo BUILD_NUMBER=%BUILD_NUMBER%>> %ARTIFACT_DIR%\\execution-meta.txt[m
+                 echo DEVICE_ID=%DEVICE_ID%>> %ARTIFACT_DIR%\\execution-meta.txt[m
+[32m+[m		[32mecho APP_ID=%APP_ID%>> %ARTIFACT_DIR%\execution-meta.txt[m
+                 echo TEST_TAG=%TEST_TAG%>> %ARTIFACT_DIR%\\execution-meta.txt[m
+                 echo WORKSPACE=%WORKSPACE%>> %ARTIFACT_DIR%\\execution-meta.txt[m
+ 		[m
+[36m@@ -66,7 +68,7 @@[m [mpipeline {[m
+ [m
+         stage('Run Maestro') {[m
+             steps {[m
+[31m-                bat '"%MAESTRO%" --device %DEVICE_ID% test . --include-tags=%TEST_TAG% --debug-output %ARTIFACT_DIR%\\maestro-debug'[m
+[32m+[m[32m                bat '"%MAESTRO%" --device %DEVICE_ID% test -e APP_ID=%APP_ID% . --include-tags=%TEST_TAG% --debug-output %ARTIFACT_DIR%\\maestro-debug'[m
+             }[m
+         }[m
+     }[m
+[1mdiff --git a/chafen_flow.yaml b/chafen_flow.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex fec689c..0000000[m
+[1m--- a/chafen_flow.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,4 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- runFlow:[m
+[31m-    file: flows/connection_cycle.yaml[m
+[1mdiff --git a/experiments/buxianshi.yaml b/experiments/buxianshi.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex 3255498..0000000[m
+[1m--- a/experiments/buxianshi.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,57 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-[m
+[31m-- launchApp:[m
+[31m-    clearState: true[m
+[31m-[m
+[31m-- tapOn: "点击连接设备"[m
+[31m-- tapOn: "A253A825C8"[m
+[31m-[m
+[31m-- extendedWaitUntil:[m
+[31m-    visible:[m
+[31m-      text: ".*延迟.*"[m
+[31m-    timeout: 10000[m
+[31m-- evalScript: ${output.counts.delay = output.counts.delay + 1}[m
+[31m-[m
+[31m-- tapOn: "设备信息"[m
+[31m-- tapOn: "版本信息"[m
+[31m-[m
+[31m-- runFlow:[m
+[31m-    label: "统计：版本信息"[m
+[31m-    when:[m
+[31m-      visible: "V9.4.9.24(94924)"[m
+[31m-    commands:[m
+[31m-      - evalScript: ${output.counts.version = output.counts.version + 1}[m
+[31m-[m
+[31m-- tapOn:[m
+[31m-    id: "iv_left_icon"[m
+[31m-[m
+[31m-- tapOn: "注册信息"[m
+[31m-[m
+[31m-- runFlow:[m
+[31m-    label: "统计：RTK"[m
+[31m-    when:[m
+[31m-      visible: "RTK"[m
+[31m-    commands:[m
+[31m-      - evalScript: ${output.counts.rtk = output.counts.rtk + 1}[m
+[31m-[m
+[31m-- tapOn:[m
+[31m-    id: "iv_left_icon"[m
+[31m-[m
+[31m-- tapOn:[m
+[31m-    id: "iv_left_icon"[m
+[31m-[m
+[31m-- tapOn: "开始作业"[m
+[31m-[m
+[31m-- runFlow:[m
+[31m-    label: "统计：准备就绪"[m
+[31m-    when:[m
+[31m-      visible: "准备就绪"[m
+[31m-    commands:[m
+[31m-      - evalScript: ${output.counts.ready = output.counts.ready + 1}[m
+[31m-[m
+[31m-- tapOn:[m
+[31m-    id: "iv_back"[m
+[31m-[m
+[31m-- tapOn: "断开"[m
+[31m-- tapOn: "连接"[m
+\ No newline at end of file[m
+[1mdiff --git a/experiments/fanfu.yaml b/experiments/fanfu.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex a04c414..0000000[m
+[1m--- a/experiments/fanfu.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,21 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-[m
+[31m-# 初始化计数器[m
+[31m-- evalScript: ${output.counts = {}}[m
+[31m-- evalScript: ${output.counts.delay = 0}[m
+[31m-- evalScript: ${output.counts.version = 0}[m
+[31m-- evalScript: ${output.counts.rtk = 0}[m
+[31m-- evalScript: ${output.counts.ready = 0}[m
+[31m-[m
+[31m-- repeat:[m
+[31m-    times: 20[m
+[31m-    commands:[m
+[31m-      - runFlow:[m
+[31m-          file: ../subflows/buxianshi.yaml[m
+[31m-[m
+[31m-- evalScript: '${console.log("统计结果：延迟=" + output.counts.delay + "/20，版本=" + output.counts.version + "/20，RTK=" + output.counts.rtk + "/20，准备就绪=" + output.counts.ready + "/20")}'[m
+[31m-[m
+[31m-- assertTrue:[m
+[31m-    condition: ${output.counts.delay == 20}[m
+[31m-    label: ${"统计结果：延迟=" + output.counts.delay + "/20，版本=" + output.counts.version + "/20，RTK=" + output.counts.rtk + "/20，准备就绪=" + output.counts.ready + "/20"}[m
+\ No newline at end of file[m
+[1mdiff --git a/experiments/yanzheng.yaml b/experiments/yanzheng.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex 446c51b..0000000[m
+[1m--- a/experiments/yanzheng.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,14 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- tapOn: "\u8fde\u63a5"[m
+[31m-- tapOn:[m
+[31m-    id: "layout_device_info"[m
+[31m-- tapOn: "\u6ce8\u518c\u4fe1\u606f"[m
+[31m-- tapOn:[m
+[31m-    id: "iv_left_icon"[m
+[31m-- tapOn:[m
+[31m-    id: "iv_left_icon"[m
+[31m-- tapOn: "\u5f00\u59cb\u4f5c\u4e1a"[m
+[31m-- tapOn:[m
+[31m-    id: "iv_back"[m
+[31m-- tapOn: "\u65ad\u5f00"[m
+\ No newline at end of file[m
+[1mdiff --git a/flows/connection_cycle.yaml b/flows/connection_cycle.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex 79d6703..0000000[m
+[1m--- a/flows/connection_cycle.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,10 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- launchApp:[m
+[31m-    clearState: false[m
+[31m-- tapOn: "开始作业"[m
+[31m-- repeat:[m
+[31m-    times: 2[m
+[31m-    commands:[m
+[31m-      - runFlow:[m
+[31m-          file: ../subflows/connect_and_disconnect_once.yaml[m
+[1mdiff --git a/flows/language_switch.yaml b/flows/language_switch.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex 5073212..0000000[m
+[1m--- a/flows/language_switch.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,20 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m-data: ../data/languages.csv[m
+[31m----[m
+[31m-- launchApp:[m
+[31m-    clearState: true[m
+[31m-[m
+[31m-- runFlow:[m
+[31m-    file: ../subflows/open_language_settings.yaml[m
+[31m-[m
+[31m-- evalScript: |[m
+[31m-    output.languageIndex = parseInt(lanx, 10) + 1;[m
+[31m-[m
+[31m-- tapOn:[m
+[31m-    id: tv_name[m
+[31m-    index: ${output.languageIndex}[m
+[31m-[m
+[31m-- runFlow:[m
+[31m-    file: ../subflows/confirm_language_change.yaml[m
+[31m-[m
+[31m-- assertVisible: "${expectedText}"[m
+[1mdiff --git a/flows/rtk_collection.yaml b/flows/rtk_collection.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex a8f30e8..0000000[m
+[1m--- a/flows/rtk_collection.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,9 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- launchApp:[m
+[31m-    clearState: false[m
+[31m-- repeat:[m
+[31m-    times: 3[m
+[31m-    commands:[m
+[31m-      - runFlow:[m
+[31m-          file: ../subflows/collect_rtk_once.yaml[m
+[1mdiff --git a/flows/startup/app_launch.yaml b/flows/startup/app_launch.yaml[m
+[1mindex 0679668..0637262 100644[m
+[1m--- a/flows/startup/app_launch.yaml[m
+[1m+++ b/flows/startup/app_launch.yaml[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-appId: com.sinognss.ws[m
+[32m+[m[32mappId: ${APP_ID}[m
+ tags:[m
+   - smoke[m
+   - regression[m
+[1mdiff --git a/scan.yaml b/scan.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex 9076819..0000000[m
+[1m--- a/scan.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,4 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- runFlow:[m
+[31m-    file: flows/rtk_collection.yaml[m
+[1mdiff --git a/subflows/collect_rtk_once.yaml b/subflows/collect_rtk_once.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex 7de3f8d..0000000[m
+[1m--- a/subflows/collect_rtk_once.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,17 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- tapOn: "开始作业"[m
+[31m-- tapOn:[m
+[31m-    id: bt_stop[m
+[31m-- tapOn:[m
+[31m-    id: text_input_end_icon[m
+[31m-- tapOn: "RTK"[m
+[31m-- tapOn: "开始采集"[m
+[31m-- assertVisible: "采集中"[m
+[31m-- assertVisible: "00:10"[m
+[31m-- tapOn:[m
+[31m-    id: bt_stop[m
+[31m-- tapOn: "确定"[m
+[31m-- assertNotVisible: "数据保存"[m
+[31m-- tapOn:[m
+[31m-    id: iv_back[m
+[1mdiff --git a/subflows/confirm_language_change.yaml b/subflows/confirm_language_change.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex 7bbb2c5..0000000[m
+[1m--- a/subflows/confirm_language_change.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,6 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- tapOn:[m
+[31m-    id: iv_left_icon[m
+[31m-- tapOn:[m
+[31m-    id: btn_positive[m
+[1mdiff --git a/subflows/connect_and_disconnect_once.yaml b/subflows/connect_and_disconnect_once.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex eb3fa0c..0000000[m
+[1m--- a/subflows/connect_and_disconnect_once.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,20 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- tapOn:[m
+[31m-    id: iv_setting[m
+[31m-- tapOn: "连接"[m
+[31m-- tapOn: "确定"[m
+[31m-- tapOn:[m
+[31m-    id: iv_setting[m
+[31m-- extendedWaitUntil:[m
+[31m-    visible: "固定"[m
+[31m-    timeout: 40000[m
+[31m-- tapOn:[m
+[31m-    id: iv_setting[m
+[31m-- tapOn: "断开"[m
+[31m-- tapOn:[m
+[31m-    id: iv_setting[m
+[31m-- extendedWaitUntil:[m
+[31m-    visible: "延迟:20|延迟:40|浮动"[m
+[31m-    timeout: 25000[m
+[31m-    optional: true[m
+[1mdiff --git a/subflows/open_language_settings.yaml b/subflows/open_language_settings.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex bdf2624..0000000[m
+[1m--- a/subflows/open_language_settings.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,6 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- tapOn:[m
+[31m-    id: iv_setting[m
+[31m-- tapOn:[m
+[31m-    id: rb_language[m
+[1mdiff --git a/test_language_switch.yaml b/test_language_switch.yaml[m
+[1mdeleted file mode 100644[m
+[1mindex 58ec02b..0000000[m
+[1m--- a/test_language_switch.yaml[m
+[1m+++ /dev/null[m
+[36m@@ -1,4 +0,0 @@[m
+[31m-appId: com.sinognss.ws[m
+[31m----[m
+[31m-- runFlow:[m
+[31m-    file: flows/language_switch.yaml[m
